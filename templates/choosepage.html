@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "snippets/head.html" %}
+    <title>Smart Reader</title>
+    <style>
+      label {
+          /* display: block; */
+          width: 100%;
+          /* max-width: 300px; */
+          background-color: darkgrey;
+          border-radius: 2px;
+          font-size: 1em;
+          line-height: 2.5em;
+          text-align: center;
+      }
+      label:hover {
+          background-color: gray;
+      }
+  </style>
+</head>
+    {% include "snippets/head.html" %}
+<body>
+    
+    <header id="header" class="d-flex flex-column justify-content-center">
+
+      <nav id="navbar" class="navbar nav-menu">
+        <ul>
+          <li><a href="\" class="nav-link scrollto active"><i class="bx bx-arrow-back"></i> <span>Home</span></a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+
+    </header><!-- End Header -->
+
+    <section id="services" class="services">
+        <div class="container" data-aos="fade-up">
+    
+          <div class="section-title">
+            <h2>Which page do you want to read?</h2>
+            <p>Bagi partisipan pengujian, silahkan membaca <strong>halaman 13 & 14 !</strong></p>
+            <!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
+          </div>
+
+          <div class="row">
+          <form method="POST" action="{% url 'writepage' %}">
+            {% csrf_token %}
+            {{ form_page }}
+            <button type="submit" class="btn btn-secondary" style="width:100%">Let's Read</button>
+          </form>
+          </div>
+        </div>
+      </section><!-- End Services Section -->
+    </main><!-- End #main -->
+    {% include "snippets/footer.html" %}
+    {% include "snippets/scripts.html" %}
+</body>
+</html>

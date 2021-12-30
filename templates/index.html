@@ -1,0 +1,113 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "snippets/head.html" %}
+    <title>Smart Reader</title>
+
+    <style>
+        label {
+            /* display: block; */
+            width: 100%;
+            /* max-width: 300px; */
+            background-color: darkgrey;
+            border-radius: 2px;
+            font-size: 1em;
+            line-height: 2.5em;
+            text-align: center;
+        }
+        label:hover {
+            background-color: gray;
+        }
+        input {
+            border: 0;
+            clip: rect(1px, 1px, 1px, 1px);
+            height: 1px; 
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+    </style>
+</head>
+    {% include "snippets/head.html" %}
+<body>
+    {% include "snippets/navbar.html" %}
+    {% include "snippets/section1.html" %}
+
+    <!-- Modal -->
+    <!-- <div class="modal fade" id="modalstart" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+       <div class="modal-content" style="opacity: 80%;">
+           <div class="modal-header" style="padding:5px 10px;">
+           <h4 class="modal-title"><strong>Terima kasih telah menjadi partisipan !</strong></h4>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body" style="padding-bottom: 0;">
+               <h6>Berikut ini adalah panduan untuk pelaksanaan pengujian sistem ini :</h6>
+               <p style="font-size: smaller;">
+                1. Setelah membaca panduan ini, partisipan wajib menghidupkan screenrecord pada laptop untuk merekam kegiatan membaca mulai dari mengunggah file eBook.
+                (Screenrecord pada win10/win11 : WIn+G -> click icon "⚫" pada jendela "Capture")
+                <br><br>
+                2. Setelah screenrecord menyala, partisipan dipersilahkan mengunggah ebook dengan namafile "Document-1" yang nanti sudah tersedia pada perangkat ini.
+                <br><br>
+                3. Kemudian partisipan membaca dari halaman 13 s.d 14 pada eBook tersebut
+                <br><br>
+                4. Setelah selesai membaca, partisipan menghentikan screenrecord
+                <br><br>
+                5. Terakhir, partisipan mengisi post-test dan kuisioner singkat yang terdapat pada bit.ly/form-ereader. (Partisipan dilarang melihat eBook ketika mengisi post-test!)
+               </p>
+           </div>
+           <div class="modal-footer" style="padding:5px 10px;">
+           </div>
+       </div>
+       </div>
+   </div> -->
+
+    <section id="upload">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>Upload Files :</h2>
+           </div>
+            <div class="content dropzone" style="border-style: dashed;padding:20px 100px;">
+                <div class="row">
+                    <div class="dz-message" data-dz-message>
+                        <div class="icon">
+                            <i class="flaticon-file"></i>
+                        </div>
+                        <h4 class="message">Choose your files here</h4>
+                        <div class="note">You can only upload a document files with <strong>.pdf</strong> extension</div>
+                    </div>
+                </div>
+                <div class="row" style="align-items:center;">
+                    <form method="POST" action="{% url 'extract' %}" id="fileupload" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="document">
+                            <input type="file" name="docpdf" id="document" accept=".pdf" onchange="this.form.submit()">
+                            Get file
+                        </label>
+                    </form>
+                </div>
+            </div>
+      </section>
+    </main>
+    {% include "snippets/footer.html" %}
+    {% include "snippets/scripts.html" %}
+
+    <!-- <script src="{% static 'assets/dropzone/dropzone.js' %}"></script>
+    <script src="{% static 'assets/dropzone/dropzone-amd-module.js' %}"></script> -->
+
+    <!-- <script>
+        // Modal when the page start running
+        var modalToggle = new bootstrap.Modal(document.getElementById('modalstart'), {
+            keyboard: false
+        });
+        $(document).ready(function() {
+            modalToggle.show();
+        });
+    </script> -->
+    
+</body>
+</html>
