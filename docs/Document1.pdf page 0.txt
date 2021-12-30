@@ -1,0 +1,23 @@
+Critical Review - Human computer interaction based eye controlled
+
+mouse
+
+Albertus Bayu Aji Priyono ST, MMSi
+
+Abstrak - Kebutuhan akan hands-free dalam pengoperasian komputer sangat diminati dan
+
+dibutuhkan terutama bagi para penyandang tunadaksa. Dalam hal ini khususnya para penderita
+
+quadriplegia. Jurnal yang dibahas pada penulisan ini memberikan sebuah solusi berupa sebuah
+
+sistem Human Computer Interaction (HCI) berbasiskan mata dan pergerakkan kepala. Penulisan ini
+
+menjelaskan beberapa metode pendekatan yang digunakan dan kaitannya dengan penelitian
+
+terdahulu. Dalam penulisan ini juga dilakukan beberapa analisis tentang pendekatan, sumber daya
+
+dan hasil penelitian. Di akhir tulisan ini, akan disimpulkan beberapa masalah tentang metode yang
+
+digunakan dan mencari kemungkinan penelitian selanjutnya yang dapat dikerjakan.
+
+
