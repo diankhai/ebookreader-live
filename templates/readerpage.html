@@ -60,26 +60,33 @@
 <body>
     <!-- style="background-color: lightgoldenrodyellow;" -->
     {% include "snippets/navbar_reader.html" %}
-    
-    <video id="video" width="150" autoplay  hidden></video>
+
+    <video id="video" width="150" autoplay hidden></video>
     <canvas id="canvas" hidden></canvas>
     <img id="server" src="" style="background-color: grey;position:fixed;right:0;top:0;width:100px;" />
     <!-- Modal -->
     <div class="modal fade" id="modalstart" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-         <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: lightcoral;padding:5px 10px;">
-            <h6 class="modal-title"><i class="bx bx-error-circle"></i> <strong>Please start the detector first !</strong></h6>
-            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="opacity: 80%;">
+                <div class="modal-header" style="padding:5px 10px;background-color: rgb(138, 51, 51);">
+                    <h6 class="modal-title" style="color:white"><i class='bx bxs-left-arrow-circle'></i>  Silahkan menghidupkan detektor("<i class="bx bx-video"></i>") terlebih dahulu!</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding-bottom: 0;">
+                    <div class="row align-items-start">
+                        <h5><strong>Panduan Penggunaan :</strong></h5>
+                        <p style="font-size:smaller;">
+                            <strong style="color:green">Berkedip</strong> untuk memindahkan highlight ke <strong style="color:green">baris selanjunya</strong>.<br>
+                            <strong style="color:blue">Mata gerak ke atas</strong> untuk memindahkan highlight ke <strong style="color:blue">baris sebelumnya</strong>.
+                        </p>
+                        <h4><strong>Shortcut Key :</strong></h4>
+                        <p style="margin:0;">"Enter", <strong>hetikan</strong> detektor.</p>
+                        <p>"Shift", <strong>mulai</strong> detektor.</p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:5px 10px;border-top: #fff;">
+                </div>
             </div>
-            <div class="modal-body" style="background-color: lightcoral;">
-                <p><strong>Blink</strong> to move-down the highlight</p>
-                <p><strong>Look Up</strong> to move-up the highlight</p>
-                <p><strong>Shortkey :</strong></p>
-                <p>- "Enter" to <strong>stop</strong> detector.</p>
-                <p>- "Shift" to <strong>restart</strong> detector.</p>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -98,14 +105,14 @@
             Detector is <strong>stopped</strong>!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding:10px;"></button>
         </div>
-        
-    <div class="wrapper" id="zone">
-    {% for lines in file_content %}
-        {% if lines != enter %}
+
+        <div class="wrapper" id="zone">
+            {% for lines in file_content %}
+            {% if lines != enter %}
             <p id="lines" class="lines blurred">{{ lines }}</p>
-        {% endif %}
-    {% endfor %}
-    </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
 
 
@@ -113,131 +120,131 @@
 
     <script>
         //button back to previous page
-    document.getElementById('go-back').addEventListener('click', () => {
-        history.back();
-    });
-    
-    //formula to count size of obj
-    Object.size = function(obj) {
-        var size = 0,
-            key;
-        for (key in obj) {
-            if (obj.hasOwnProperty(key)) size++;
-        }
-        return size;
-    };
-
-    $(document).ready(function() {
-        modalToggle.show();
-        $('#btn-start').click(function() {
-            show(start);
-            modalToggle.hide();
-            begin();
+        document.getElementById('go-back').addEventListener('click', () => {
+            history.back();
         });
-    });
 
-    var video = document.getElementById('video');
-    var canvas = document.getElementById('canvas');
-    var server     = document.getElementById('server');
-    var context = canvas.getContext('2d');
-
-    function begin(){
-        console.log(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        // Not adding `{ audio: true }` since we only want video now
-        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-            //video.src = window.URL.createObjectURL(stream);
-            video.srcObject = stream;
-            video.play();
-            //console.log('setInterval')
-            detector = window.setInterval(function() {
-                context.drawImage(video, 0, 0, 320, 240); // better use size because camera may gives data in different size then <video> is displaying
-                canvas.toBlob(upload, "image/jpeg");
-                //-------------------
-                $.get("{% url 'blinkcmmd' %}", function(data) { //passing command value if blinking
-                    var move = data.value;
-                    tracker(move);
-                });
-            }, 100);
-            });
+        //formula to count size of obj
+        Object.size = function (obj) {
+            var size = 0,
+                key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
         };
-    }
 
-    // get image from canvas, send to server as POST, get result image, display image as IMG
-    function upload(file) {
-        // create form and add file
-        var formdata = new FormData();
-        // formdata.serialize();
-        formdata.append("snap", file);
-        // create AJAX connection
-        fetch("{% url 'upload' %}", {
-            method: 'POST',
-            body: formdata,
-        }).then(function(response) {
-            return response.blob();
-        }).then(function(blob) {
-            //console.log(blob);  // it slow down video from server
-            server.src = URL.createObjectURL(blob);
-        }).catch(function(err) {
-            console.log('Fetch problem: ' + err.message);
+        $(document).ready(function () {
+            modalToggle.show();
+            $('#btn-start').click(function () {
+                show(start);
+                modalToggle.hide();
+                begin();
+            });
         });
-        
-    }
 
-    // Get the container element
-    var lineZone = document.getElementById("zone");
-    var lines = lineZone.getElementsByClassName("lines");
-    var totalLines = Object.size(lines);
-    
-    //Get for alert div
-    var warning = document.getElementById("warning");
-    var start = document.getElementById("start");
-    var stops = document.getElementById("stop");
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var server = document.getElementById('server');
+        var context = canvas.getContext('2d');
 
-    // Modal when the page start running
-    var modalToggle = new bootstrap.Modal(document.getElementById('modalstart'), {
+        function begin() {
+            console.log(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                // Not adding `{ audio: true }` since we only want video now
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                    //console.log('setInterval')
+                    detector = window.setInterval(function () {
+                        context.drawImage(video, 0, 0, 320, 240); // better use size because camera may gives data in different size then <video> is displaying
+                        canvas.toBlob(upload, "image/jpeg");
+                        //-------------------
+                        $.get("{% url 'blinkcmmd' %}", function (data) { //passing command value if blinking
+                            var move = data.value;
+                            tracker(move);
+                        });
+                    }, 100);
+                });
+            };
+        }
+
+        // get image from canvas, send to server as POST, get result image, display image as IMG
+        function upload(file) {
+            // create form and add file
+            var formdata = new FormData();
+            // formdata.serialize();
+            formdata.append("snap", file);
+            // create AJAX connection
+            fetch("{% url 'upload' %}", {
+                method: 'POST',
+                body: formdata,
+            }).then(function (response) {
+                return response.blob();
+            }).then(function (blob) {
+                //console.log(blob);  // it slow down video from server
+                server.src = URL.createObjectURL(blob);
+            }).catch(function (err) {
+                console.log('Fetch problem: ' + err.message);
+            });
+
+        }
+
+        // Get the container element
+        var lineZone = document.getElementById("zone");
+        var lines = lineZone.getElementsByClassName("lines");
+        var totalLines = Object.size(lines);
+
+        //Get for alert div
+        var warning = document.getElementById("warning");
+        var start = document.getElementById("start");
+        var stops = document.getElementById("stop");
+
+        // Modal when the page start running
+        var modalToggle = new bootstrap.Modal(document.getElementById('modalstart'), {
             keyboard: false
         });
-    
-    function show (elements, specifiedDisplay) {
-        elements = elements.length ? elements : [elements];
-        for (var index = 0; index < elements.length; index++) {
-            elements[index].style.display = specifiedDisplay || 'block';
+
+        function show(elements, specifiedDisplay) {
+            elements = elements.length ? elements : [elements];
+            for (var index = 0; index < elements.length; index++) {
+                elements[index].style.display = specifiedDisplay || 'block';
+            }
         }
-    }
-    
-    //load sfx audio
-    var audio = new Audio("{% static 'assets/sfx.mp3' %}");
-    // Loop to get command value
-    i=-1;
-    function tracker(move){
-        
-        // var before = document.getElementsByClassName("unblur");
-        if (move==1) {
-        i++;
-        // alert(i);
-        var current = document.getElementsByClassName("lines");
-        var semi1 = document.getElementsByClassName("gray");
-                if(i==totalLines){
+
+        //load sfx audio
+        var audio = new Audio("{% static 'assets/sfx.mp3' %}");
+        // Loop to get command value
+        i = -1;
+        function tracker(move) {
+
+            // var before = document.getElementsByClassName("unblur");
+            if (move == 1) {
+                i++;
+                // alert(i);
+                var current = document.getElementsByClassName("lines");
+                var semi1 = document.getElementsByClassName("gray");
+                if (i == totalLines) {
                     show(warning);
                     clearInterval()
-                    i=0;
+                    i = 0;
                 }
-                if(i<=0){
+                if (i <= 0) {
                     current[0].className = current[0].className.replace("lines blurred", "lines unblur");
                     current[1].className = current[1].className.replace("lines blurred", "lines gray");
                     audio.play();
                 };
-                if(i==1){
-                    current[i-1].className = current[i-1].className.replace("lines unblur", "lines gray");
+                if (i == 1) {
+                    current[i - 1].className = current[i - 1].className.replace("lines unblur", "lines gray");
                     current[i].className = current[i].className.replace("lines gray", "lines unblur");
-                    current[i+1].className = current[i+1].className.replace("lines blurred", "lines gray");
-                }else{
+                    current[i + 1].className = current[i + 1].className.replace("lines blurred", "lines gray");
+                } else {
                     // current[0].className = current[0].className.replace("lines unblur", "lines blurred");
-                    current[i-2].className = current[i-2].className.replace("lines gray", "lines blurred");
-                    current[i-1].className = current[i-1].className.replace("lines unblur", "lines gray");
+                    current[i - 2].className = current[i - 2].className.replace("lines gray", "lines blurred");
+                    current[i - 1].className = current[i - 1].className.replace("lines unblur", "lines gray");
                     current[i].className = current[i].className.replace("lines gray", "lines unblur");
-                    current[i+1].className = current[i+1].className.replace("lines blurred", "lines gray");
+                    current[i + 1].className = current[i + 1].className.replace("lines blurred", "lines gray");
                     audio.play();
                     current[i].scrollIntoView({
                         behavior: 'smooth',
@@ -245,50 +252,50 @@
                         inline: 'center'
                     });
                 };
-        } //endof if .get 1
-        if (move==2){
-        // $("#btn-bck").click(function(){
-            // alert(i);
-        var current = document.getElementsByClassName("lines");
-                if(i<=0){
+            } //endof if .get 1
+            if (move == 2) {
+                // $("#btn-bck").click(function(){
+                // alert(i);
+                var current = document.getElementsByClassName("lines");
+                if (i <= 0) {
                     current[0].className = current[0].className.replace("lines blurred", "lines unblur");
                     current[1].className = current[1].className.replace("lines blurred", "lines gray");
                     audio.play();
                 }
-                else{
-                    current[i-2].className = current[i-2].className.replace(" blurred"," gray");
-                    current[i-1].className = current[i-1].className.replace(" gray"," unblur");
+                else {
+                    current[i - 2].className = current[i - 2].className.replace(" blurred", " gray");
+                    current[i - 1].className = current[i - 1].className.replace(" gray", " unblur");
                     current[i].className = current[i].className.replace("lines unblur", "lines gray");
-                    current[i+1].className = current[i+1].className.replace(" gray"," blurred");
+                    current[i + 1].className = current[i + 1].className.replace(" gray", " blurred");
                     audio.play();
-                    current[i-1].scrollIntoView({
+                    current[i - 1].scrollIntoView({
                         behavior: 'smooth',
                         block: 'center',
                         inline: 'center'
                     });
                 }
-            i--;
-        } //endof if .get 2
-    }
+                i--;
+            } //endof if .get 2
+        }
 
-    $('#btn-stop').click(function() {
-        show(stops);
-        clearInterval(detector);
-    });
-    
-    //ADDITIONAL FEATURES WITH KEYBOARD KEY CODE
-    $(document).keydown(function(event) {
-        var key = (event.keyCode ? event.keyCode : event.which);
-        if (key == '13'){ //if press enter
+        $('#btn-stop').click(function () {
             show(stops);
             clearInterval(detector);
-        }
-        if (key == '16'){ //if press shift
-            show(start);
-            modalToggle.hide();
-            begin();
-        }
-    });
+        });
+
+        //ADDITIONAL FEATURES WITH KEYBOARD KEY CODE
+        $(document).keydown(function (event) {
+            var key = (event.keyCode ? event.keyCode : event.which);
+            if (key == '13') { //if press enter
+                show(stops);
+                clearInterval(detector);
+            }
+            if (key == '16') { //if press shift
+                show(start);
+                modalToggle.hide();
+                begin();
+            }
+        });
     </script>
 </body>
 </html>
