@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\project"
+    "\\static",
+    "\\templates"
   ],
-  "SelectedNode": "\\Aptfile",
+  "SelectedNode": "\\templates\\readerpage.html",
   "PreviewInSolutionExplorer": false
 }
