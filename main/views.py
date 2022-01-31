@@ -51,20 +51,6 @@ def index(request):
     }
     return render(request,'index.html', context)
 
-# def extract(request):
-    # content = ""
-    # pdfFile = open('static/docs/Document1.pdf', 'rb')
-    # pdf = PyPDF2.PdfFileReader(pdfFile)
-    # num_pages = pdf.getNumPages()
-    # for i in range(0, num_pages):
-	#     pageObj = pdf.getPage(i)
- 	#    content = pageObj.extractText()
-     # for i in range(0, num_pages):
-     #     content += pdf.getPage(i).extractText() + "\n"
-     # content = " ".join(content.replace(u"\xa0", " ").strip().split())
-    # context = {'file_content': content}
-     #return render(request,'readerpage.html', context)
-
 class choosePage(forms.Form):
     def __init__(self,pageChoice,upload_date,*args,**kwargs):
         super(choosePage,self).__init__(*args,**kwargs)
@@ -248,63 +234,6 @@ class GazeTracking(object):
 
         return frame
 
-# class blinkdetect(object):
-
-    # def __init__(self): 
-    #     self.video = cv2.VideoCapture(0+cv2.CAP_DSHOW) # (0+cv2.CAP_DSHOW)built-in cam ; (2) droidcam; (3) webcam
-    #     (self.grabbed, self.frame)=self.video.read()
-    #     self.video.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-    #     threading.Thread(target=self.update, args=()).start()
- 
-    # def __del__(self):
-    #     self.video.release()
-    #     # cv2.destroyAllWindows() 
-    
-    # def update(self):
-    #     while True:
-    #         if self.video.isOpened():
-    #             (self.status, self.frame) = self.video.read()
-
-    # def valcommand(cmmd):
-    #     if (cmmd<4):
-    #         val.insert(0, cmmd)
-    #         del val[1]
-    #     else :
-    #         return val[0]
-
-    # def get_frame(self):
-    #     global cmmd #to passing the value command if blink detected
-    #     cmmd=0
-
-    #     #these landmarks are based on the image above 
-    #     left_eye_landmarks  = [36, 37, 38, 39, 40, 41]
-    #     right_eye_landmarks = [42, 43, 44, 45, 46, 47]
-        
-    #     retval, frame = self.video.read()
-    #     # frame = cv2.flip(frame,1) ---mirroring video
-
-    #     #--------------GAZE DETECTOR---------------
-    #     gaze = GazeTracking()
-    #     gaze.refresh(frame)
-    #     frame = gaze.annotated_frame() #draw line in pupil
-    #     blinkdetect.valcommand(0)
-    #     if  gaze.is_blinking():
-    #     #Blink detected! Do Something!
-    #         cv2.putText(frame,"BLINKING",(10,50), cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),2,cv2.LINE_AA)
-    #         blinkdetect.valcommand(1)
-    #     elif gaze.is_up():
-    #         text = "Looking up"
-    #         cv2.putText(frame, text, (10,50), cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),2,cv2.LINE_AA)
-    #         blinkdetect.valcommand(2)
-    #     else: 
-    #         blinkdetect.valcommand(0)
-    #         # cv2.putText(frame,"No face detected",(100,100),cv2.FONT_HERSHEY_PLAIN, 3,(0,0,255),2)
-    #         # # cmmd=3 #value for face not detected
-    #         # blinkdetect.valcommand(3) 
-
-    #     cv2.waitKey(1)
-    #     _, jpeg = cv2.imencode('.jpg', frame)
-    #     return jpeg.tobytes()
 
 def send_file_data(data, mimetype='image/jpeg', filename='output.jpg'):
     # https://stackoverflow.com/questions/11017466/flask-to-return-image-stored-in-database/11017839
@@ -343,26 +272,11 @@ def upload(request):
             return send_file_data(buf.tobytes())
     return redirect('/')
 
-#to grab the camera object
-# def gen():
-#     while True:
-#         camera=blinkdetect()
-#         frame=camera.get_frame()
-#         # print(cmmd)
-#         yield(b'--frame\r\n'
-#         b'Content-Type: image/jpeg\r\n\r\n'+frame+b'\r\n\r\n')
-
 #get the blink command
 def command(request):
     # p=blinkdetect()
     value=valcommand(4) # 4 define not a command value    
     command= {'value':value}
     return JsonResponse(command,safe=False)
-
-#load camera
-# @gzip.gzip_page
-# def camera(request):
-#     # cam = blinkdetect()
-#     return StreamingHttpResponse(gen(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 #-----------end of eye-tracker-----------------#
